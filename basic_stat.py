@@ -1,10 +1,5 @@
 import numpy as np
-#import csv
-#import pandas as pd
-#import os, glob
-#import scipy
-#import scipy.stats as st
-#import numpy
+
 import rpy2.robjects as robjects
 import rpy2.robjects.numpy2ri as np2r
 
@@ -31,6 +26,12 @@ def check_const(x):
     return np.sum(xx**2)==0.
 
 def t_test(x,y):
+    '''
+    perform a test to assess the difference between two distributions;
+    
+    t-test if both distributions are normally distributed,
+    wilcox-test otherwise
+    '''
     xx=np2r.numpy2ri(np.array(ignore_nan(x)))
     yy=np2r.numpy2ri(np.array(ignore_nan(y)))
     if len(xx)<=3 or len(yy)<=3:
@@ -48,7 +49,12 @@ def t_test(x,y):
         w=robjects.r['wilcox.test'](xx,yy)
         p=w.rx('p.value')[0][0]
     return p
+
 def correlaz(a,b):
+        '''
+    perform a test to assess the correlation between two distributions,
+    using sperman method
+    '''
     x,y=ignore_couple_nan(a,b)
     if len(x)==0 or len(y)==0:
         return np.nan, np.nan
